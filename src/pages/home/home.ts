@@ -81,7 +81,7 @@ export class HomePage {
       //       alert(err);
       //     });
       // });
-      console.log('trying to connect...');
+      alert('trying to connect...');
       return this.spark.phone.register()
         .then(() => {
           // This is just a little helper for our selenium tests and doesn't
@@ -89,7 +89,7 @@ export class HomePage {
           document.body.classList.add('listening');
           console.log('connected');
           //document.getElementById('connection-status').innerHTML = 'connected';
-          console.log('calling jordi...');
+          alert('calling jordi...');
           this.spark.phone.dial('jadan@makenai.es');
         })
         // This is a terrible way to handle errors, but anything more specific is
