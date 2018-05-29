@@ -13,4 +13,12 @@
   </p>
   <button ion-button title="connect" color="default" (click)="connect();" type="button" full> Connect </button>
 
+  <div style="display: flex">
+    <video style="width:50%" id="self-view" muted autoplay></video>
+    <div style="width:50%">
+      <audio id="remote-view-audio" autoplay></audio>
+      <video id="remote-view-video" autoplay></video>
+    </div>
+  </div>
+
 </ion-content>
