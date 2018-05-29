@@ -1,0 +1,8 @@
+{
+  "name": "ibermutuamur",
+  "app_id": "7fbccae4",
+  "type": "ionic-angular",
+  "integrations": {
+    "cordova": {}
+  }
+}
