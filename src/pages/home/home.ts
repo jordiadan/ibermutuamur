@@ -16,20 +16,21 @@ export class HomePage {
   private access_token = "NWM0Njk4ZmEtZjEyMC00YzIzLWE2NDAtMmQwMWQxM2VlOTFmZTJkYzlmNjEtYWFh";
 
   constructor(public navCtrl: NavController, private androidPermissions: AndroidPermissions) {
-    this.checkPermissions();
+
   }
 
   checkPermissions(){
     this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.CAMERA).then(
       result => alert('Has permission? ' + result.hasPermission),
-      err => this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.CAMERA)
+      err => alert('Onrejected permissions')/* this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.CAMERA)*/
     );
   }
 
   connect() {
     alert("Connecting...");
     //this.test_promise()
-    this.connect_and_register()
+    //this.connect_and_register()
+    this.checkPermissions()
   }
 
   test_promise(){
