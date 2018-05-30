@@ -15,22 +15,22 @@ export class HomePage {
   private spark;
   private access_token = "NWM0Njk4ZmEtZjEyMC00YzIzLWE2NDAtMmQwMWQxM2VlOTFmZTJkYzlmNjEtYWFh";
 
-  constructor(public navCtrl: NavController, private androidPermissions: AndroidPermissions) {
+  constructor(public navCtrl: NavController) {
 
   }
 
-  checkPermissions(){
-    this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.CAMERA).then(
-      result => alert('Has permission? ' + result.hasPermission),
-      err => alert('Onrejected permissions')/* this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.CAMERA)*/
-    );
-  }
+  // checkPermissions(){
+  //   this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.CAMERA).then(
+  //     result => alert('Has permission? ' + result.hasPermission),
+  //     err => alert('Onrejected permissions')/* this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.CAMERA)*/
+  //   );
+  // }
 
   connect() {
     alert("Connecting...");
     //this.test_promise()
     //this.connect_and_register()
-    this.checkPermissions()
+    //this.checkPermissions()
   }
 
   test_promise(){
