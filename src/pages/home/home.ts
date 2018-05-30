@@ -1,5 +1,7 @@
 import {Component} from '@angular/core';
 import {NavController} from 'ionic-angular';
+import { AndroidPermissions } from '@ionic-native/android-permissions';
+
 import * as ciscospark from 'ciscospark';
 
 
@@ -13,8 +15,15 @@ export class HomePage {
   private spark;
   private access_token = "NWM0Njk4ZmEtZjEyMC00YzIzLWE2NDAtMmQwMWQxM2VlOTFmZTJkYzlmNjEtYWFh";
 
-  constructor(public navCtrl: NavController) {
+  constructor(public navCtrl: NavController, private androidPermissions: AndroidPermissions) {
+    this.checkPermissions();
+  }
 
+  checkPermissions(){
+    this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.CAMERA).then(
+      result => alert('Has permission? ' + result.hasPermission),
+      err => this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.CAMERA)
+    );
   }
 
   connect() {
