@@ -22,7 +22,7 @@ export class HomePage {
   checkPermissions(){
     this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.CAMERA).then(
       result => alert('Has permission? ' + result.hasPermission),
-      err => this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.CAMERA)
+      err => alert('Need persmission...') /*this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.CAMERA)*/
     );
   }
 
