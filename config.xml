@@ -87,4 +87,5 @@
         <variable name="UPDATE_METHOD" value="background" />
     </plugin>
     <plugin name="cordova-plugin-android-permissions" spec="^1.0.0" />
+    <plugin name="cordova-plugin-camera" spec="^4.0.3" />
 </widget>
