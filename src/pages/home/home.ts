@@ -1,6 +1,5 @@
 import {Component} from '@angular/core';
 import {NavController} from 'ionic-angular';
-import { AndroidPermissions } from '@ionic-native/android-permissions';
 
 import * as ciscospark from 'ciscospark';
 
