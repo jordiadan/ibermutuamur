@@ -22,10 +22,24 @@ export class HomePage {
   checkPermissions(){
     this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.CAMERA).then(
       result => alert('Has permission? ' + result.hasPermission),
-      err => alert('Need persmission...') /*this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.CAMERA)*/
+      err => this.requestCameraPermissions()
     );
   }
 
+
+  requestCameraPermissions(){
+    alert('Need persmission...');
+    let permissions = [
+      this.androidPermissions.PERMISSION.CAMERA
+    ];
+
+    this.androidPermissions.requestPermissions(permissions).then(
+      result => alert('Permission granted? ' + result),
+      err => alert('Cannot request permissions...')
+    );
+  }
+
+  // try to use only connect_and_register with the permissions granted on the Application
   connect() {
     alert("Connecting...");
     //this.test_promise()
