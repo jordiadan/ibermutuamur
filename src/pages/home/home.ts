@@ -1,8 +1,9 @@
 import {Component} from '@angular/core';
-import {NavController} from 'ionic-angular';
+import {NavController, Platform} from 'ionic-angular';
 
 import * as ciscospark from 'ciscospark';
 import {AndroidPermissions} from "@ionic-native/android-permissions";
+import {Camera, CameraOptions} from "@ionic-native/camera";
 
 
 @Component({
@@ -11,15 +12,44 @@ import {AndroidPermissions} from "@ionic-native/android-permissions";
 })
 
 export class HomePage {
-
+  private image: string = null;
   private spark;
   private access_token = "NWM0Njk4ZmEtZjEyMC00YzIzLWE2NDAtMmQwMWQxM2VlOTFmZTJkYzlmNjEtYWFh";
 
-  constructor(public navCtrl: NavController, private androidPermissions: AndroidPermissions) {
+  constructor(
+    public plt: Platform,
+    public navCtrl: NavController,
+    private androidPermissions: AndroidPermissions,
+    private camera: Camera) { this.checkDevice();}
 
+  getPicture() {
+    let options: CameraOptions = {
+      destinationType: this.camera.DestinationType.DATA_URL,
+      targetWidth: 1000,
+      targetHeight: 1000,
+      quality: 100
+    };
+
+    this.camera.getPicture(options)
+      .then(imageData => {
+        console.log('Imagen tomada!');
+        alert('Imagen tomada!');
+        this.image = `data:image/jpeg;base64,${imageData}`;
+      })
+      .catch(error => {
+        console.error(error);
+        alert(error);
+      });
   }
 
-  checkPermissions(){
+  checkDevice() {
+    console.log('Android: ' + this.plt.is('android'));
+    console.log('iOS: ' + this.plt.is('ios'));
+    console.log('mobileweb: ' + this.plt.is('mobileweb'));
+    console.log('cordova: ' + this.plt.is('cordova'));
+  }
+
+  checkPermissions() {
     this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.CAMERA).then(
       result => alert('Has permission? ' + result.hasPermission),
       err => this.requestCameraPermissions()
@@ -27,7 +57,7 @@ export class HomePage {
   }
 
 
-  requestCameraPermissions(){
+  requestCameraPermissions() {
     alert('Need persmission...');
     let permissions = [
       this.androidPermissions.PERMISSION.CAMERA
@@ -35,7 +65,7 @@ export class HomePage {
 
     this.androidPermissions.requestPermissions(permissions).then(
       result => alert('Permission granted? ' + result),
-      err => alert('Cannot request permissions...')
+      err => alert('Cannot request permissions...' + err)
     );
   }
 
@@ -45,15 +75,17 @@ export class HomePage {
     //this.test_promise()
     //this.connect_and_register()
     this.checkPermissions()
+    //this.getPicture();
   }
 
-  test_promise(){
-    var test = new Promise(function(){});
+  test_promise() {
+    var test = new Promise(function () {
+    });
     test.constructor = Object;
     Promise.resolve(test);
   }
 
-  connect_and_register(){
+  connect_and_register() {
     alert("Connecting...");
     if (!this.spark) {
       this.spark = ciscospark.init({

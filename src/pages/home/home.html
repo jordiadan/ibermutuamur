@@ -20,5 +20,7 @@
       <video id="remote-view-video" autoplay></video>
     </div>
   </div>
+  <button ion-button block (click)="getPicture()">Toma una foto</button>
+  <img [src]="image" *ngIf="image" />
 
 </ion-content>
