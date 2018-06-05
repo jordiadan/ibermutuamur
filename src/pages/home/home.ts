@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {NavController, Platform} from 'ionic-angular';
 
 import * as ciscospark from 'ciscospark';
-import {AndroidPermissions} from "@ionic-native/android-permissions";
+//import {AndroidPermissions} from "@ionic-native/android-permissions";
 import {Camera, CameraOptions} from "@ionic-native/camera";
 
 
@@ -20,28 +20,8 @@ export class HomePage {
   constructor(
     public plt: Platform,
     public navCtrl: NavController,
-    private androidPermissions: AndroidPermissions /*,
+    /*private androidPermissions: AndroidPermissions,
     private camera: Camera*/) {}
-
-  getPicture() {
-    // let options: CameraOptions = {
-    //   destinationType: this.camera.DestinationType.DATA_URL,
-    //   targetWidth: 1000,
-    //   targetHeight: 1000,
-    //   quality: 100
-    // };
-    //
-    // this.camera.getPicture(options)
-    //   .then(imageData => {
-    //     console.log('Imagen tomada!');
-    //     alert('Imagen tomada!');
-    //     this.image = `data:image/jpeg;base64,${imageData}`;
-    //   })
-    //   .catch(error => {
-    //     console.error(error);
-    //     alert(error);
-    //   });
-  }
 
   checkDevice() {
     console.log('Android: ' + this.plt.is('android'));
@@ -50,27 +30,27 @@ export class HomePage {
     console.log('cordova: ' + this.plt.is('cordova'));
   }
 
-  checkPermissions() {
-    this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.CAMERA).then(
-      result => alert('Has permission? ' + result.hasPermission),
-      err => this.requestCameraPermissions()
-    );
-  }
-
-
-  requestCameraPermissions() {
-    alert('Need persmission...');
-    let permissions = [
-      this.androidPermissions.PERMISSION.CAMERA,
-      this.androidPermissions.PERMISSION.MODIFY_AUDIO_SETTINGS,
-      this.androidPermissions.PERMISSION.RECORD_AUDIO,
-    ];
-
-    this.androidPermissions.requestPermissions(permissions).then(
-      result => alert('Permission granted? ' + result),
-      err => alert('Cannot request permissions...' + err)
-    );
-  }
+  // checkPermissions() {
+  //   this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.CAMERA).then(
+  //     result => alert('Has permission? ' + result.hasPermission),
+  //     err => this.requestCameraPermissions()
+  //   );
+  // }
+  //
+  //
+  // requestCameraPermissions() {
+  //   alert('Need persmission...');
+  //   let permissions = [
+  //     this.androidPermissions.PERMISSION.CAMERA,
+  //     this.androidPermissions.PERMISSION.MODIFY_AUDIO_SETTINGS,
+  //     this.androidPermissions.PERMISSION.RECORD_AUDIO,
+  //   ];
+  //
+  //   this.androidPermissions.requestPermissions(permissions).then(
+  //     result => alert('Permission granted? ' + result),
+  //     err => alert('Cannot request permissions...' + err)
+  //   );
+  // }
 
   // try to use only connect_and_register with the permissions granted on the Application
   connect() {
