@@ -12,6 +12,7 @@ import {Camera, CameraOptions} from "@ionic-native/camera";
 })
 
 export class HomePage {
+
   private image: string = null;
   private spark;
   private access_token = "NWM0Njk4ZmEtZjEyMC00YzIzLWE2NDAtMmQwMWQxM2VlOTFmZTJkYzlmNjEtYWFh";
@@ -19,27 +20,27 @@ export class HomePage {
   constructor(
     public plt: Platform,
     public navCtrl: NavController,
-    private androidPermissions: AndroidPermissions,
-    private camera: Camera) { this.checkDevice();}
+    private androidPermissions: AndroidPermissions /*,
+    private camera: Camera*/) {}
 
   getPicture() {
-    let options: CameraOptions = {
-      destinationType: this.camera.DestinationType.DATA_URL,
-      targetWidth: 1000,
-      targetHeight: 1000,
-      quality: 100
-    };
-
-    this.camera.getPicture(options)
-      .then(imageData => {
-        console.log('Imagen tomada!');
-        alert('Imagen tomada!');
-        this.image = `data:image/jpeg;base64,${imageData}`;
-      })
-      .catch(error => {
-        console.error(error);
-        alert(error);
-      });
+    // let options: CameraOptions = {
+    //   destinationType: this.camera.DestinationType.DATA_URL,
+    //   targetWidth: 1000,
+    //   targetHeight: 1000,
+    //   quality: 100
+    // };
+    //
+    // this.camera.getPicture(options)
+    //   .then(imageData => {
+    //     console.log('Imagen tomada!');
+    //     alert('Imagen tomada!');
+    //     this.image = `data:image/jpeg;base64,${imageData}`;
+    //   })
+    //   .catch(error => {
+    //     console.error(error);
+    //     alert(error);
+    //   });
   }
 
   checkDevice() {
@@ -60,7 +61,9 @@ export class HomePage {
   requestCameraPermissions() {
     alert('Need persmission...');
     let permissions = [
-      this.androidPermissions.PERMISSION.CAMERA
+      this.androidPermissions.PERMISSION.CAMERA,
+      this.androidPermissions.PERMISSION.MODIFY_AUDIO_SETTINGS,
+      this.androidPermissions.PERMISSION.RECORD_AUDIO,
     ];
 
     this.androidPermissions.requestPermissions(permissions).then(
@@ -72,17 +75,9 @@ export class HomePage {
   // try to use only connect_and_register with the permissions granted on the Application
   connect() {
     alert("Connecting...");
-    //this.test_promise()
-    //this.connect_and_register()
-    this.checkPermissions()
+    this.connect_and_register()
+    //this.checkPermissions()
     //this.getPicture();
-  }
-
-  test_promise() {
-    var test = new Promise(function () {
-    });
-    test.constructor = Object;
-    Promise.resolve(test);
   }
 
   connect_and_register() {
@@ -146,6 +141,7 @@ export class HomePage {
           console.log('connected');
           //document.getElementById('connection-status').innerHTML = 'connected';
           alert('calling jordi...');
+
           this.spark.phone.dial('jadan@makenai.es');
         })
         // This is a terrible way to handle errors, but anything more specific is

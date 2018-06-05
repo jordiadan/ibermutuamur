@@ -27,7 +27,7 @@ import {AndroidPermissions} from "@ionic-native/android-permissions";
   providers: [
     StatusBar,
     SplashScreen,
-    Camera,
+    //Camera,
     AndroidPermissions,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
