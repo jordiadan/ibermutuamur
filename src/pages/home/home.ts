@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ElementRef, ViewChild} from '@angular/core';
 import {NavController, Platform} from 'ionic-angular';
 
 import * as ciscospark from 'ciscospark';
@@ -15,13 +15,17 @@ export class HomePage {
 
   private image: string = null;
   private spark;
-  private access_token = "NWM0Njk4ZmEtZjEyMC00YzIzLWE2NDAtMmQwMWQxM2VlOTFmZTJkYzlmNjEtYWFh";
+  private access_token = "MDNmMjQwMTktZjA2Ni00NTY5LWJiN2YtZTM1NjM3ODgxYjhmYTA2MTllYTgtZjU4";
 
+  @ViewChild('selfView') selfView: ElementRef;
+  @ViewChild('remoteViewAudio') remoteViewAudio: ElementRef;
+  @ViewChild('remoteViewVideo') remoteViewVideo: ElementRef;
   constructor(
     public plt: Platform,
     public navCtrl: NavController,
     /*private androidPermissions: AndroidPermissions,
-    private camera: Camera*/) {}
+    private camera: Camera*/) {
+  }
 
   checkDevice() {
     console.log('Android: ' + this.plt.is('android'));
@@ -122,7 +126,8 @@ export class HomePage {
           //document.getElementById('connection-status').innerHTML = 'connected';
           alert('calling jordi...');
 
-          this.spark.phone.dial('jadan@makenai.es');
+          const call = this.spark.phone.dial('jadan@makenai.es');
+          this.bindCallEvents(call);
         })
         // This is a terrible way to handle errors, but anything more specific is
         // going to depend a lot on your app
@@ -136,5 +141,64 @@ export class HomePage {
     }
 
     return Promise.resolve();
+  }
+
+  bindCallEvents(call) {
+    // call is a call instance, not a promise, so to know if things break,
+    // we'll need to listen for the error event. Again, this is a rather naive
+    // handler.
+    call.on('error', (err) => {
+      console.error(err);
+      alert(err.stack);
+    });
+
+    // We can start rendering local and remote video before the call is
+    // officially connected but not right when it's dialed, so we'll need to
+    // listen for the streams to become available. We'll use `.once` instead
+    // of `.on` because those streams will not change for the duration of
+    // the call and it's one less event handler to worry about later.
+
+    call.once('localMediaStream:change', () => {
+      //document.getElementById('selfView').srcObject = call.localMediaStream;
+      this.selfView.nativeElement.srcObject = call.localMediaStream;
+    });
+
+    call.on('remoteMediaStream:change', () => {
+      // Ok, yea, this is a little weird. There's a Chrome behavior that prevents
+      // audio from playing from a video tag if there is no corresponding video
+      // track.
+      [
+        'audio',
+        'video'
+      ].forEach((kind) => {
+        if (call.remoteMediaStream) {
+          const track = call.remoteMediaStream.getTracks().find((t) => t.kind === kind);
+          if (track) {
+            if(kind === 'audio') {
+              console.log('Creating AUDIO MediaStream');
+              this.remoteViewAudio.nativeElement.srcObject =  new MediaStream([track]);
+            } else if (kind === 'video') {
+              console.log('Creating VIDEO MediaStream');
+              this.remoteViewVideo.nativeElement.srcObject =  new MediaStream([track]);
+            }
+            //document.getElementById(`remote-view-${kind}`).srcObject = new MediaStream([track]);
+          }
+        }
+      });
+    });
+
+    // Once the call ends, we'll want to clean up our UI a bit
+    call.on('inactive', () => {
+      // Remove the streams from the UI elements
+      //document.getElementById('selfView').srcObject = undefined;
+      //document.getElementById('remoteViewAudio').srcObject = undefined;
+      //document.getElementById('remoteViewVideo').srcObject = undefined;
+
+      this.selfView.nativeElement.srcObject = undefined;
+      this.remoteViewAudio.nativeElement.srcObject = undefined;
+      this.remoteViewVideo.nativeElement.srcObject = undefined;
+    });
+
+
   }
 }
