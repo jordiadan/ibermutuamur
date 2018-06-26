@@ -5,7 +5,6 @@ import * as ciscospark from 'ciscospark';
 //import {AndroidPermissions} from "@ionic-native/android-permissions";
 import {Camera, CameraOptions} from "@ionic-native/camera";
 
-
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
@@ -15,7 +14,7 @@ export class HomePage {
 
   private image: string = null;
   private spark;
-  private access_token = "MDNmMjQwMTktZjA2Ni00NTY5LWJiN2YtZTM1NjM3ODgxYjhmYTA2MTllYTgtZjU4";
+  private access_token = "NWZhNjBmMTAtOWRkYS00MzMyLTgxNjgtY2Q4YzVjMWQwOTcxY2UzNmFhM2QtMDEw";
 
   @ViewChild('selfView') selfView: ElementRef;
   @ViewChild('remoteViewAudio') remoteViewAudio: ElementRef;

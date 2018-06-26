@@ -9,11 +9,15 @@ import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import {Camera} from "@ionic-native/camera";
 import {AndroidPermissions} from "@ionic-native/android-permissions";
+import { AbsoluteDrag } from '../directives/absolute-drag/absolute-drag';
+
+
 
 @NgModule({
   declarations: [
     MyApp,
     HomePage,
+    AbsoluteDrag
   ],
   imports: [
     BrowserModule,

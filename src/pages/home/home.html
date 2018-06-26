@@ -7,20 +7,29 @@
 </ion-header>
 
 <ion-content padding>
-  The world is your oyster.
-  <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.
-  </p>
-  <button ion-button title="connect" color="default" (click)="connect();" type="button" full> Connect </button>
 
-  <div style="display: flex">
-    <video #selfView style="width:50%" id="self-view" muted autoplay></video>
-    <div style="width:50%">
-      <audio #remoteViewAudio id="remote-view-audio" autoplay></audio>
-      <video #remoteViewVideo id="remote-view-video" autoplay></video>
+
+  <!--<div style="display: flex">-->
+    <!--<video #selfView style="width:50%" id="self-view" muted autoplay></video>-->
+    <!--<div style="width:50%">-->
+      <!--<audio #remoteViewAudio id="remote-view-audio" autoplay></audio>-->
+      <!--<video absolute-drag #remoteViewVideo id="remote-view-video" autoplay></video>-->
+    <!--</div>-->
+  <!--</div>-->
+
+  <div id="div-parent">
+    <audio id="remote-view-audio" autoplay></audio>
+    <video #remoteViewVideo id="remote-view-video" autoplay></video>
+    <!--<ion-img src="../../assets/imgs/doctor.jpg"></ion-img>-->
+    <div absolute-drag id="div-child">
+      <video #selfView id="self-view" muted autoplay></video>
+      <!--<ion-img src="../../assets/imgs/user.png"></ion-img>-->
     </div>
   </div>
-  <button ion-button block (click)="getPicture()">Toma una foto</button>
-  <img [src]="image" *ngIf="image" />
+
+  <button ion-button id="call-button" title="connect" color="default" (click)="connect();" type="button" full> Connect </button>
+
+  <!--<button ion-button block (click)="getPicture()">Toma una foto</button>-->
+  <!--<img [src]="image" *ngIf="image" />-->
 
 </ion-content>
