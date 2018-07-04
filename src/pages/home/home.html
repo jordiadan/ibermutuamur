@@ -18,7 +18,7 @@
   <!--</div>-->
 
   <div id="div-parent">
-    <audio id="remote-view-audio" autoplay></audio>
+    <audio #remoteViewAudio id="remote-view-audio" autoplay></audio>
     <video #remoteViewVideo id="remote-view-video" autoplay></video>
     <!--<ion-img src="../../assets/imgs/doctor.jpg"></ion-img>-->
     <div absolute-drag id="div-child">
@@ -26,6 +26,8 @@
       <!--<ion-img src="../../assets/imgs/user.png"></ion-img>-->
     </div>
   </div>
+
+
 
   <button ion-button id="call-button" title="connect" color="default" (click)="connect();" type="button" full> Connect </button>
 

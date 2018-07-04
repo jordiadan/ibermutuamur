@@ -14,7 +14,7 @@ export class HomePage {
 
   private image: string = null;
   private spark;
-  private access_token = "NWZhNjBmMTAtOWRkYS00MzMyLTgxNjgtY2Q4YzVjMWQwOTcxY2UzNmFhM2QtMDEw";
+  private access_token = "NzBlNzBlODItMWU5NS00ZmU3LWEyMTctNjU0MmZmZjg2MTIxZTJjNmYyMjktMTAw";
 
   @ViewChild('selfView') selfView: ElementRef;
   @ViewChild('remoteViewAudio') remoteViewAudio: ElementRef;
