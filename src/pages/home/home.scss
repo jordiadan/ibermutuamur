@@ -1,42 +1,80 @@
 page-home {
+  //#div-parent {
+  //  border-style: solid;
+  //  position: absolute;
+  //  height: auto;
+  //  bottom: 0;
+  //  top: 0;
+  //  left: 0;
+  //  right: 0;
+  //  background-color: orange;
+  //}
+  //
+  //#div-child {
+  //  position: absolute;
+  //  border-style: solid;
+  //  border-color: teal;
+  //  height: 25%;
+  //  //right: 0;
+  //  //top: 0;
+  //  float:right;
+  //  background-color: white;
+  //}
+  //
+  //#call-button {
+  //  width: 100%;
+  //  position: absolute;
+  //  bottom: 0;
+  //  left: 0;
+  //}
+  //
+  //#remote-view-video {
+  //  max-height: 100%;
+  //  max-width: 100%;
+  //  width:auto;
+  //}
+  //
+  //#self-view {
+  //  max-height: 100%;
+  //  max-width: 100%;
+  //  width:auto;
+  //}
+
+  ///////////////////////////////// NEW INTERFACE ////////////////////////////////////////
   #div-parent {
-    border-style: solid;
-    position: absolute;
-    height: auto;
-    bottom: 0;
-    top: 0;
-    left: 0;
-    right: 0;
-    background-color: orange;
+    background: red;
+    position:absolute;
+    height:100%;
+    width:100%;
+    overflow: hidden;
+
   }
 
   #div-child {
-    position: absolute;
-    border-style: solid;
-    border-color: teal;
-    height: 25%;
-    //right: 0;
-    //top: 0;
-    float:right;
-    background-color: white;
-  }
-
-  #call-button {
-    width: 100%;
-    position: absolute;
-    bottom: 0;
-    left: 0;
+    background: blue;
   }
 
   #remote-view-video {
-    max-height: 100%;
+    background: green;
     max-width: 100%;
-    width:auto;
+    max-height: 100%;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 
   #self-view {
-    max-height: 100%;
-    max-width: 100%;
-    width:auto;
+    background: yellow;
+    max-width: 25%;
+
+    position:relative;
+    float:right;
+  }
+
+  #call-button {
+    position: absolute;
+    bottom:   0;
   }
 }

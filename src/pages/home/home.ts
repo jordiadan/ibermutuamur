@@ -1,9 +1,11 @@
 import {Component, ElementRef, ViewChild} from '@angular/core';
-import {NavController, Platform} from 'ionic-angular';
+import {/*NavController,*/ Platform, MenuController} from 'ionic-angular';
 
 import * as ciscospark from 'ciscospark';
 //import {AndroidPermissions} from "@ionic-native/android-permissions";
 import {Camera, CameraOptions} from "@ionic-native/camera";
+//import {AndroidPermissions} from "@ionic-native/android-permissions";
+
 
 @Component({
   selector: 'page-home',
@@ -12,25 +14,28 @@ import {Camera, CameraOptions} from "@ionic-native/camera";
 
 export class HomePage {
 
+  private TAG = "IBERMUTUAMUR_CISCOSPARK ";
   private image: string = null;
   private spark;
-  private access_token = "NzBlNzBlODItMWU5NS00ZmU3LWEyMTctNjU0MmZmZjg2MTIxZTJjNmYyMjktMTAw";
+  private access_token = "ZGNiMzA1ZDQtYjQ5MS00NWRkLTk5MjgtZmMzNzA2ODUwYzllMWQ5Y2FjOWEtNTA1";
 
   @ViewChild('selfView') selfView: ElementRef;
   @ViewChild('remoteViewAudio') remoteViewAudio: ElementRef;
-  @ViewChild('remoteViewVideo') remoteViewVideo: ElementRef;
+  @ViewChild('remoteViewVideo') remoteViewVideo: any;
   constructor(
     public plt: Platform,
-    public navCtrl: NavController,
-    /*private androidPermissions: AndroidPermissions,
-    private camera: Camera*/) {
+    //public navCtrl: NavController,
+    public menuCtrl: MenuController,
+    //private androidPermissions: AndroidPermissions,
+    /*private camera: Camera*/) {
   }
 
   checkDevice() {
-    console.log('Android: ' + this.plt.is('android'));
-    console.log('iOS: ' + this.plt.is('ios'));
-    console.log('mobileweb: ' + this.plt.is('mobileweb'));
-    console.log('cordova: ' + this.plt.is('cordova'));
+    console.log(this.TAG + 'User-Agent: ' + navigator.userAgent);
+    console.log(this.TAG + 'Android: ' + this.plt.is('android'));
+    console.log(this.TAG + 'iOS: ' + this.plt.is('ios'));
+    console.log(this.TAG + 'mobileweb: ' + this.plt.is('mobileweb'));
+    console.log(this.TAG + 'cordova: ' + this.plt.is('cordova'));
   }
 
   // checkPermissions() {
@@ -55,8 +60,26 @@ export class HomePage {
   //   );
   // }
 
-  // try to use only connect_and_register with the permissions granted on the Application
+  // requestCameraPermissions(){
+  //   this.androidPermissions.hasPermission(this.androidPermissions.PERMISSION.READ_EXTERNAL_STORAGE).then(status => {
+  //     if(status.hasPermission) {
+  //       alert("Permission GRANTED!")
+  //     } else {
+  //       alert("Requesting permission...");
+  //       this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.READ_EXTERNAL_STORAGE)
+  //         .then(status => {
+  //           if(status.hasPermission){
+  //             alert("Permission GRANTED!");
+  //           }
+  //         });
+  //     }
+  //   });
+  // }
+
+  // try to use only connect   _and_register with the permissions granted on the Application
   connect() {
+    //this.requestCameraPermissions();
+    this.checkDevice();
     alert("Connecting...");
     this.connect_and_register()
     //this.checkPermissions()
@@ -64,6 +87,7 @@ export class HomePage {
   }
 
   connect_and_register() {
+
     alert("Connecting...");
     if (!this.spark) {
       this.spark = ciscospark.init({
@@ -92,6 +116,8 @@ export class HomePage {
       //       // Let's render the name of the person calling us. Note that calls
       //       // from external sources (some SIP URIs, PSTN numbers, etc) may not
       //       // have personIds, so we can't assume that field will exist.
+      //
+      //       console.log('call incoming');
       //       if (call.from && call.from.personId) {
       //         // In production, you'll want to cache this so you don't have to do
       //         // a fetch on every incoming call.
@@ -102,11 +128,14 @@ export class HomePage {
       //     })
       //     .then((person) => {
       //       const str = person ? `Anwser incoming call from ${person.displayName}` : 'Answer incoming call';
+      //       console.log(str);
+      //
       //       if (confirm(str)) {
       //         call.answer();
-      //         //this.bindCallEvents(call);
+      //         this.bindCallEvents(call);
       //       }
       //       else {
+      //         console.log('declined');
       //         call.decline();
       //       }
       //     })
@@ -115,24 +144,37 @@ export class HomePage {
       //       alert(err);
       //     });
       // });
+
       alert('trying to connect...');
       return this.spark.phone.register()
         .then(() => {
           // This is just a little helper for our selenium tests and doesn't
           // really matter for the example
-          document.body.classList.add('listening');
+          //document.body.classList.add('listening');
           console.log('connected');
           //document.getElementById('connection-status').innerHTML = 'connected';
-          alert('calling jordi...');
 
+          this.spark.phone.isCallingSupported()
+            .then(()=> {
+              console.log(this.TAG + 'is calling SUPPORTED!');
+            })
+            .catch((err) =>{
+              console.log(this.TAG + 'is NOT calling SUPPORTED...');
+            });
+
+          alert('calling...');
+          //const call = this.spark.phone.dial('500121@colaboracion.ibermutuamur.es');
           const call = this.spark.phone.dial('jadan@makenai.es');
-          this.bindCallEvents(call);
+
+          this.bindMyEvents(call);
+          //this.bindCallEvents(call);
         })
         // This is a terrible way to handle errors, but anything more specific is
         // going to depend a lot on your app
         .catch((err) => {
-          console.error(err);
-          alert(err.stack);
+          console.error(this.TAG + err);
+          console.error(this.TAG + err.stack);
+          alert(err);
           // we'll rethrow here since we didn't really *handle* the error, we just
           // reported it
           throw err;
@@ -142,23 +184,30 @@ export class HomePage {
     return Promise.resolve();
   }
 
-  bindCallEvents(call) {
-    // call is a call instance, not a promise, so to know if things break,
-    // we'll need to listen for the error event. Again, this is a rather naive
-    // handler.
-    call.on('error', (err) => {
-      console.error(err);
-      alert(err.stack);
+  bindMyEvents(call) {
+
+    call.on('call:created', () => {
+      console.log(this.TAG + 'CALL IS CREATED!');
     });
 
-    // We can start rendering local and remote video before the call is
-    // officially connected but not right when it's dialed, so we'll need to
-    // listen for the streams to become available. We'll use `.once` instead
-    // of `.on` because those streams will not change for the duration of
-    // the call and it's one less event handler to worry about later.
+    call.on('error', (err) => {
+      console.log(this.TAG + 'LOCAL MEDIA STREAM: ' + call.localMediaStream);
+      console.log(this.TAG + 'REMOTE MEDIA STREAM: ' + call.remoteMediaStream);
+
+
+      console.log(this.TAG + 'STATS STREAM: ' + call.getStatsStream());
+      console.log(this.TAG + 'STATUS: ' + call.status);
+      console.log(this.TAG + 'STATE: ' + call.state);
+
+      //console.error(this.TAG + err);
+      console.error(this.TAG + err.stack);
+
+      alert(this.TAG + err);
+    });
 
     call.once('localMediaStream:change', () => {
       //document.getElementById('selfView').srcObject = call.localMediaStream;
+      console.log(this.TAG + 'Creating LOCAL MediaStream');
       this.selfView.nativeElement.srcObject = call.localMediaStream;
     });
 
@@ -171,14 +220,51 @@ export class HomePage {
         'video'
       ].forEach((kind) => {
         if (call.remoteMediaStream) {
+          console.log(this.TAG + "Number of TRACKS: " + call.remoteMediaStream.getTracks().length);
           const track = call.remoteMediaStream.getTracks().find((t) => t.kind === kind);
           if (track) {
             if(kind === 'audio') {
-              console.log('Creating AUDIO MediaStream');
-              this.remoteViewAudio.nativeElement.srcObject =  new MediaStream([track]);
+              console.log(this.TAG + 'Creating AUDIO MediaStream');
+              //this.remoteViewAudio.nativeElement.srcObject =  new MediaStream([track]);
+              //alert('REMOTE AUDIO ADDED!');
+
             } else if (kind === 'video') {
-              console.log('Creating VIDEO MediaStream');
-              this.remoteViewVideo.nativeElement.srcObject =  new MediaStream([track]);
+              console.log(this.TAG + 'Creating VIDEO MediaStream');
+              console.log(track.getCapabilities());
+              console.log(track.getConstraints());
+              console.log(track.getSettings());
+
+              console.log('IS ENABLED: ' + track.enabled);
+              console.log('IS REMOTE: ' + track.remote);
+              console.log('STREAM STATE: ' + track.readyState);
+              console.log('CONTENT HINT: ' + track.contentHint);
+
+              console.log('PRINT MEDIA STREAM');
+              console.log(call.remoteMediaStream);
+              console.log(track);
+
+              //this.remoteViewVideo.nativeElement.srcObject =  new MediaStream([track]);
+              //alert('new: ' + track.readyState);
+
+              //this.remoteViewVideo.nativeElement.srcObject =  call.remoteMediaStream;
+
+              let video = this.remoteViewVideo.nativeElement;
+              video.srcObject = new MediaStream([track])
+
+              let playPromise = video.play();
+
+              if(playPromise !== undefined){
+                playPromise.then( _ => {
+                  console.log('PLAYING VIDEO!');
+                })
+                  .catch(error => {
+                    console.log('ERROR PLAYING VIDEO...');
+                    console.error(error);
+                  });
+              }
+
+              //alert('REMOTE VIDEO ADDED!');
+
             }
             //document.getElementById(`remote-view-${kind}`).srcObject = new MediaStream([track]);
           }
@@ -192,11 +278,73 @@ export class HomePage {
       //document.getElementById('selfView').srcObject = undefined;
       //document.getElementById('remoteViewAudio').srcObject = undefined;
       //document.getElementById('remoteViewVideo').srcObject = undefined;
-
+      console.log(this.TAG + "inactive...");
       this.selfView.nativeElement.srcObject = undefined;
       this.remoteViewAudio.nativeElement.srcObject = undefined;
       this.remoteViewVideo.nativeElement.srcObject = undefined;
     });
+
+
+  }
+  bindCallEvents(call) {
+    // call is a call instance, not a promise, so to know if things break,
+    // we'll need to listen for the error event. Again, this is a rather naive
+    // handler.
+    call.on('error', (err) => {
+      console.error(this.TAG + err);
+      alert(this.TAG + err.stack);
+    });
+
+    // We can start rendering local and remote video before the call is
+    // officially connected but not right when it's dialed, so we'll need to
+    // listen for the streams to become available. We'll use `.once` instead
+    // of `.on` because those streams will not change for the duration of
+    // the call and it's one less event handler to worry about later.
+
+    call.once('localMediaStream:change', () => {
+      //document.getElementById('selfView').srcObject = call.localMediaStream;
+      console.log(this.TAG + 'Creating LOCAL MediaStream');
+      this.selfView.nativeElement.srcObject = call.localMediaStream;
+    });
+
+    call.on('remoteMediaStream:change', () => {
+      // Ok, yea, this is a little weird. There's a Chrome behavior that prevents
+      // audio from playing from a video tag if there is no corresponding video
+      // track.
+      [
+        'audio',
+        'video'
+      ].forEach((kind) => {
+        if (call.remoteMediaStream) {
+          console.log(this.TAG + "Number of TRACKS: " + call.remoteMediaStream.getTracks().length);
+          const track = call.remoteMediaStream.getTracks().find((t) => t.kind === kind);
+          if (track) {
+            if(kind === 'audio') {
+              console.log(this.TAG + 'Creating AUDIO MediaStream');
+              //this.remoteViewAudio.nativeElement.srcObject =  new MediaStream([track]);
+            } else if (kind === 'video') {
+              console.log(this.TAG + 'Creating VIDEO MediaStream');
+              //this.remoteViewVideo.nativeElement.srcObject =  new MediaStream([track]);
+            }
+            //document.getElementById(`remote-view-${kind}`).srcObject = new MediaStream([track]);
+          }
+        }
+      });
+    });
+
+    // Once the call ends, we'll want to clean up our UI a bit
+    call.on('inactive', () => {
+      // Remove the streams from the UI elements
+      //document.getElementById('selfView').srcObject = undefined;
+      //document.getElementById('remoteViewAudio').srcObject = undefined;
+      //document.getElementById('remoteViewVideo').srcObject = undefined;
+      console.log(this.TAG + "inactive...");
+      this.selfView.nativeElement.srcObject = undefined;
+      this.remoteViewAudio.nativeElement.srcObject = undefined;
+      this.remoteViewVideo.nativeElement.srcObject = undefined;
+    });
+
+
 
 
   }

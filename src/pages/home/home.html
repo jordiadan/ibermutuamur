@@ -1,12 +1,17 @@
 <ion-header>
   <ion-navbar>
+    <ion-buttons start>
+      <button ion-button icon-only menuToggle>
+        <ion-icon name="menu"></ion-icon>
+      </button>
+    </ion-buttons>
     <ion-title>
-      Ionic Blank
+      Ibermutuamur
     </ion-title>
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content>
 
 
   <!--<div style="display: flex">-->
@@ -18,10 +23,12 @@
   <!--</div>-->
 
   <div id="div-parent">
-    <audio #remoteViewAudio id="remote-view-audio" autoplay></audio>
-    <video #remoteViewVideo id="remote-view-video" autoplay></video>
+    <!--<audio #remoteViewAudio id="remote-view-audio" autoplay></audio>-->
+    <video #remoteViewVideo id="remote-view-video">
+      <!--<source id="mp4" src="http://grochtdreis.de/fuer-jsfiddle/video/sintel_trailer-480.mp4" type="video/mp4">-->
+    </video>
     <!--<ion-img src="../../assets/imgs/doctor.jpg"></ion-img>-->
-    <div absolute-drag id="div-child">
+    <div  id="div-child"><!-- absolute-drag -->
       <video #selfView id="self-view" muted autoplay></video>
       <!--<ion-img src="../../assets/imgs/user.png"></ion-img>-->
     </div>
@@ -29,7 +36,7 @@
 
 
 
-  <button ion-button id="call-button" title="connect" color="default" (click)="connect();" type="button" full> Connect </button>
+  <button ion-button id="call-button" title="connect" color="default" (click)="connect();" type="button" full no-margin> Connect </button>
 
   <!--<button ion-button block (click)="getPicture()">Toma una foto</button>-->
   <!--<img [src]="image" *ngIf="image" />-->

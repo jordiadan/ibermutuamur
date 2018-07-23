@@ -4,22 +4,22 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { HomePage } from '../pages/home/home';
-import {AndroidPermissions} from "@ionic-native/android-permissions";
+//import {AndroidPermissions} from "@ionic-native/android-permissions";
 @Component({
   templateUrl: 'app.html'
 })
 export class MyApp {
   rootPage:any = HomePage;
 
-  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, androidPermissions: AndroidPermissions) {
+  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, /*androidPermissions: AndroidPermissions*/) {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       statusBar.styleDefault();
       splashScreen.hide();
 
-      androidPermissions.requestPermissions(
-         [
+      //androidPermissions.requestPermissions(
+      //   [
       //     androidPermissions.PERMISSION.CAMERA,
       //     androidPermissions.PERMISSION.CALL_PHONE,
       //     androidPermissions.PERMISSION.GET_ACCOUNTS,
@@ -29,12 +29,12 @@ export class MyApp {
       //     androidPermissions.PERMISSION.INTERNET,
       //     androidPermissions.PERMISSION.ACCESS_NETWORK_STATE,
       //     androidPermissions.PERMISSION.ACCESS_WIFI_STATE,
-           androidPermissions.PERMISSION.RECORD_AUDIO,
-           androidPermissions.PERMISSION.MODIFY_AUDIO_SETTINGS,
+      //     androidPermissions.PERMISSION.RECORD_AUDIO,
+      //     androidPermissions.PERMISSION.MODIFY_AUDIO_SETTINGS,
       //     androidPermissions.PERMISSION.WAKE_LOCK,
       //     androidPermissions.PERMISSION.GET_TASKS
-         ]
-       )
+      //   ]
+      //)
     });
   }
 }
