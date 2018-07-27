@@ -41,7 +41,7 @@ page-home {
   //}
 
   ///////////////////////////////// NEW INTERFACE ////////////////////////////////////////
-  #div-parent {
+#div-parent {
     background: red;
     position:absolute;
     height:100%;
@@ -76,5 +76,15 @@ page-home {
   #call-button {
     position: absolute;
     bottom:   0;
+    display: inline-block;
+    width: 50%;
+  }
+
+  #dtmf-button {
+    position: absolute;
+    bottom:   0;
+    right: 0;
+    display: inline-block;
+    width: 50%;
   }
 }

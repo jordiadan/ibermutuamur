@@ -9,6 +9,7 @@ import { HomePage } from '../pages/home/home';
 import {Camera} from "@ionic-native/camera";
 import {AndroidPermissions} from "@ionic-native/android-permissions";
 import { AbsoluteDrag } from '../directives/absolute-drag/absolute-drag';
+import {VideoPlayer} from "@ionic-native/video-player";
 
 
 
@@ -31,6 +32,7 @@ import { AbsoluteDrag } from '../directives/absolute-drag/absolute-drag';
     StatusBar,
     SplashScreen,
     //Camera,
+    VideoPlayer,
     AndroidPermissions,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]

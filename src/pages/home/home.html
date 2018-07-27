@@ -23,19 +23,19 @@
   <!--</div>-->
 
   <div id="div-parent">
-    <!--<audio #remoteViewAudio id="remote-view-audio" autoplay></audio>-->
-    <video #remoteViewVideo id="remote-view-video">
+    <audio #remoteViewAudio id="remote-view-audio" autoplay></audio>
+    <video #remoteViewVideo id="remote-view-video" autoplay>
       <!--<source id="mp4" src="http://grochtdreis.de/fuer-jsfiddle/video/sintel_trailer-480.mp4" type="video/mp4">-->
     </video>
     <!--<ion-img src="../../assets/imgs/doctor.jpg"></ion-img>-->
     <div  id="div-child"><!-- absolute-drag -->
-      <video #selfView id="self-view" muted autoplay></video>
+      <video #selfView id="self-view" autoplay muted></video>
       <!--<ion-img src="../../assets/imgs/user.png"></ion-img>-->
     </div>
   </div>
 
 
-
+  <button ion-button id="dtmf-button" title="connect" color="default" (click)="sendPin();" type="button" full no-margin> Send PIN </button>
   <button ion-button id="call-button" title="connect" color="default" (click)="connect();" type="button" full no-margin> Connect </button>
 
   <!--<button ion-button block (click)="getPicture()">Toma una foto</button>-->

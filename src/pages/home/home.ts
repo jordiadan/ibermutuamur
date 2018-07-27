@@ -4,6 +4,9 @@ import {/*NavController,*/ Platform, MenuController} from 'ionic-angular';
 import * as ciscospark from 'ciscospark';
 //import {AndroidPermissions} from "@ionic-native/android-permissions";
 import {Camera, CameraOptions} from "@ionic-native/camera";
+import {StreamingMedia, StreamingVideoOptions} from "@ionic-native/streaming-media";
+import {VideoOptions, VideoPlayer} from "@ionic-native/video-player";
+
 //import {AndroidPermissions} from "@ionic-native/android-permissions";
 
 
@@ -14,21 +17,28 @@ import {Camera, CameraOptions} from "@ionic-native/camera";
 
 export class HomePage {
 
+  @ViewChild('selfView') selfView: any;
+  @ViewChild('remoteViewAudio') remoteViewAudio: ElementRef;
+  @ViewChild('remoteViewVideo') remoteViewVideo: ElementRef;
   private TAG = "IBERMUTUAMUR_CISCOSPARK ";
   private image: string = null;
   private spark;
-  private access_token = "ZGNiMzA1ZDQtYjQ5MS00NWRkLTk5MjgtZmMzNzA2ODUwYzllMWQ5Y2FjOWEtNTA1";
+  private call;
+  //private access_token = "ZGNiMzA1ZDQtYjQ5MS00NWRkLTk5MjgtZmMzNzA2ODUwYzllMWQ5Y2FjOWEtNTA1";
+  private access_token = "OWFiMTM2NmQtNDVjNy00MDM1LTkwMzMtOGY1ZWMyZWEyYjczMDA0NmI4NmEtYjUx";
+  private cont = 1;
+  private videoOptions: VideoOptions;
+  private videoUrl: string;
 
-  @ViewChild('selfView') selfView: ElementRef;
-  @ViewChild('remoteViewAudio') remoteViewAudio: ElementRef;
-  @ViewChild('remoteViewVideo') remoteViewVideo: any;
   constructor(
     public plt: Platform,
     //public navCtrl: NavController,
     public menuCtrl: MenuController,
+    private videoPlayer: VideoPlayer
     //private androidPermissions: AndroidPermissions,
     /*private camera: Camera*/) {
   }
+
 
   checkDevice() {
     console.log(this.TAG + 'User-Agent: ' + navigator.userAgent);
@@ -36,6 +46,13 @@ export class HomePage {
     console.log(this.TAG + 'iOS: ' + this.plt.is('ios'));
     console.log(this.TAG + 'mobileweb: ' + this.plt.is('mobileweb'));
     console.log(this.TAG + 'cordova: ' + this.plt.is('cordova'));
+    this.getDeviceDimension();
+  }
+
+  getDeviceDimension() {
+    console.log("Device Dimension using CiscoSpark");
+    console.log("Width = " + screen.width);
+    console.log("Height = " + screen.height);
   }
 
   // checkPermissions() {
@@ -76,14 +93,39 @@ export class HomePage {
   //   });
   // }
 
+  async playVideo(path) {
+
+    try {
+      this.videoOptions = {
+        volume: 0
+      };
+
+      this.videoPlayer.play(path, this.videoOptions);
+      console.log('Video played!');
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   // try to use only connect   _and_register with the permissions granted on the Application
   connect() {
     //this.requestCameraPermissions();
+    //this.playVideo('http://techslides.com/demos/sample-videos/small.mp4');
     this.checkDevice();
     alert("Connecting...");
     this.connect_and_register()
-    //this.checkPermissions()
-    //this.getPicture();
+  }
+
+  sendPin() {
+    if (this.call !== undefined) {
+      this.call.sendDtmf('1234#').then(result => {
+        console.log('Send DTMF!');
+        console.log(result);
+      })
+        .catch(err => {
+          console.error(err);
+        });
+    }
   }
 
   connect_and_register() {
@@ -155,18 +197,19 @@ export class HomePage {
           //document.getElementById('connection-status').innerHTML = 'connected';
 
           this.spark.phone.isCallingSupported()
-            .then(()=> {
+            .then(() => {
               console.log(this.TAG + 'is calling SUPPORTED!');
             })
-            .catch((err) =>{
+            .catch((err) => {
               console.log(this.TAG + 'is NOT calling SUPPORTED...');
             });
 
           alert('calling...');
           //const call = this.spark.phone.dial('500121@colaboracion.ibermutuamur.es');
-          const call = this.spark.phone.dial('jadan@makenai.es');
+          //this.call = this.spark.phone.dial('ibermutuamur@uk.cms-dcloud.com');
+          this.call = this.spark.phone.dial('jadan@makenai.es');
 
-          this.bindMyEvents(call);
+          this.bindMyEvents(this.call);
           //this.bindCallEvents(call);
         })
         // This is a terrible way to handle errors, but anything more specific is
@@ -209,6 +252,11 @@ export class HomePage {
       //document.getElementById('selfView').srcObject = call.localMediaStream;
       console.log(this.TAG + 'Creating LOCAL MediaStream');
       this.selfView.nativeElement.srcObject = call.localMediaStream;
+      this.selfView.nativeElement.muted = true;
+    });
+
+    call.on('active', () => {
+      console.log('ACTIVE!');
     });
 
     call.on('remoteMediaStream:change', () => {
@@ -223,9 +271,9 @@ export class HomePage {
           console.log(this.TAG + "Number of TRACKS: " + call.remoteMediaStream.getTracks().length);
           const track = call.remoteMediaStream.getTracks().find((t) => t.kind === kind);
           if (track) {
-            if(kind === 'audio') {
+            if (kind === 'audio') {
               console.log(this.TAG + 'Creating AUDIO MediaStream');
-              //this.remoteViewAudio.nativeElement.srcObject =  new MediaStream([track]);
+              this.remoteViewAudio.nativeElement.srcObject =  new MediaStream([track]);
               //alert('REMOTE AUDIO ADDED!');
 
             } else if (kind === 'video') {
@@ -238,30 +286,37 @@ export class HomePage {
               console.log('IS REMOTE: ' + track.remote);
               console.log('STREAM STATE: ' + track.readyState);
               console.log('CONTENT HINT: ' + track.contentHint);
+              console.log('TRACK INFO: ' + track.getTrackInfo());
+
+              //console.log('URL' + URL.createObjectURL(call.remoteMediaStream));
+
+              this.remoteViewVideo.nativeElement.srcObject  =  new MediaStream([track]);
 
               console.log('PRINT MEDIA STREAM');
               console.log(call.remoteMediaStream);
               console.log(track);
 
-              //this.remoteViewVideo.nativeElement.srcObject =  new MediaStream([track]);
-              //alert('new: ' + track.readyState);
+              alert(this.cont + ' REMOTE MEDIA STREAM');
+              this.cont++;
 
               //this.remoteViewVideo.nativeElement.srcObject =  call.remoteMediaStream;
 
-              let video = this.remoteViewVideo.nativeElement;
-              video.srcObject = new MediaStream([track])
 
-              let playPromise = video.play();
+              // let video = this.remoteViewVideo.nativeElement;
+              // video.srcObject = new MediaStream([track]);
+              //
+              // let playPromise = video.play();
+              //
+              // if(playPromise !== undefined){
+              //   playPromise.then( _ => {
+              //     console.log('PLAYING VIDEO!');
+              //   })
+              //     .catch(error => {
+              //       console.log('ERROR PLAYING VIDEO...');
+              //       console.error(error);
+              //     });
+              // }
 
-              if(playPromise !== undefined){
-                playPromise.then( _ => {
-                  console.log('PLAYING VIDEO!');
-                })
-                  .catch(error => {
-                    console.log('ERROR PLAYING VIDEO...');
-                    console.error(error);
-                  });
-              }
 
               //alert('REMOTE VIDEO ADDED!');
 
@@ -286,6 +341,7 @@ export class HomePage {
 
 
   }
+
   bindCallEvents(call) {
     // call is a call instance, not a promise, so to know if things break,
     // we'll need to listen for the error event. Again, this is a rather naive
@@ -319,12 +375,12 @@ export class HomePage {
           console.log(this.TAG + "Number of TRACKS: " + call.remoteMediaStream.getTracks().length);
           const track = call.remoteMediaStream.getTracks().find((t) => t.kind === kind);
           if (track) {
-            if(kind === 'audio') {
+            if (kind === 'audio') {
               console.log(this.TAG + 'Creating AUDIO MediaStream');
-              //this.remoteViewAudio.nativeElement.srcObject =  new MediaStream([track]);
+              this.remoteViewAudio.nativeElement.srcObject =  new MediaStream([track]);
             } else if (kind === 'video') {
               console.log(this.TAG + 'Creating VIDEO MediaStream');
-              //this.remoteViewVideo.nativeElement.srcObject =  new MediaStream([track]);
+              this.remoteViewVideo.nativeElement.srcObject =  new MediaStream([track]);
             }
             //document.getElementById(`remote-view-${kind}`).srcObject = new MediaStream([track]);
           }
@@ -343,8 +399,6 @@ export class HomePage {
       this.remoteViewAudio.nativeElement.srcObject = undefined;
       this.remoteViewVideo.nativeElement.srcObject = undefined;
     });
-
-
 
 
   }
